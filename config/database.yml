@@ -81,6 +81,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV["MY_APP_DATABASE_URL"] %>
   database: user_authentication_production
   username: user_authentication
   password: <%= ENV["USER_AUTHENTICATION_DATABASE_PASSWORD"] %>
