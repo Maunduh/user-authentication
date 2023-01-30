@@ -310,5 +310,11 @@ Devise.setup do |config|
   # config.sign_in_after_change_password = true
   config.jwt do |jwt|
     jwt.secret = Rails.application.credentials.fetch(:secret_key_base)
+    jwt.dispatch_requests = [
+      ['POST', %r{^/users/sign-in$}]
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^/users/sign-out}]
+    ]
   end
 end
