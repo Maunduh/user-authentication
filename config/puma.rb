@@ -23,6 +23,10 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Specifies the `pidfile` that Puma will use.
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
+proxy_set_header  X-Forwarded-Proto $scheme;
+proxy_set_header  X-Forwarded-Ssl on;
+proxy_set_header  X-Forwarded-Port $server_port;
+proxy_set_header  X-Forwarded-Host $host;
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked web server processes. If using threads and workers together
