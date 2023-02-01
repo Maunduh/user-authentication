@@ -2,31 +2,19 @@
 
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-  respond_to :json
   
-  private
+  respond_to :json
 
-  def respond_with(resource, _opts = {})
-    render json: {
-      status: {code: 200, message: 'Logged in sucessfully.'},
-      data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
-    }, status: :ok
-  end
+  def create
+    user = User.find_by_email(sign_in_params[:email])
 
-  def respond_to_on_destroy
-    if current_user
-      render json: {
-        status: 200,
-        message: "logged out successfully"
-      }, status: :ok
+    if user && user.valid_password?(sign_in_params[:password])
+      token = user.generate_jwt
+      render json: token.to_json
     else
-      render json: {
-        status: 401,
-        message: "Couldn't find an active session."
-      }, status: :unauthorized
+      render json: { errors: { 'email or password' => ['is invalid'] } }, status: :unprocessable_entity
     end
   end
-  
   # GET /resource/sign_in
   # def new
   #   super

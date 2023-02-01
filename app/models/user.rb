@@ -7,7 +7,11 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
 
-  def jwt_payload
+def jwt_payload
   super
- end
+end   
+
+def generate_jwt
+  JWT.encode({id: id, exp: 60.days.from_now.to_i}, Rails.application.secrets.secret_key_base)
+end
 end

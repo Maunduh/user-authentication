@@ -1,4 +1,4 @@
 class UserSerializer
     include JSON::Serializer
-    attributes  :email, :password
+    attributes :id, :email, :password
   end

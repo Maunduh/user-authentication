@@ -3,23 +3,20 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
+  
 
   respond_to :json
 
-  def respond_with(resource, _opts = {})
-    if resource.persisted?
-      render json: {
-        status: {code: 200, message: 'Signed up sucessfully.'},
-        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
-      }
+  def create
+    user = User.new(sign_up_params)
+
+    if user.save
+      token = user.generate_jwt
+      render json: token.to_json
     else
-      render json: {
-        status: {message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}"}
-      }, status: :unprocessable_entity
+      render json: { errors: { 'email or password' => ['is invalid'] } }, status: :unprocessable_entity
     end
   end
-
-
 
   
 
